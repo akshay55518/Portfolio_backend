@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Experience{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Experience</h2>
+        <a href="{% url 'experience_create' %}" class="btn btn-success">+ Add Experience</a>
+    </div>
+
+    {% if experiences %}
+        <div class="list-group">
+            {% for exp in experiences %}
+                <div class="list-group-item mb-3 shadow-sm rounded">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="mb-1">{{ exp.role }} <small class="text-muted">at {{ exp.company }}</small></h5>
+                        <small class="text-muted">{{ exp.time }}</small>
+                    </div>
+                    <ul class="mb-2">
+                        {% for task in exp.work_done %}
+                            <li>{{ task }}</li>
+                        {% endfor %}
+                    </ul>
+                    <div>
+                        <a href="{% url 'experience_edit' exp.id %}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{% url 'experience_delete' exp.id %}" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Are you sure you want to delete this experience?');">
+                           Delete
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No experience added yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

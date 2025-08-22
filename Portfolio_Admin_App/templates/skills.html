@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Skills{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4 text-center">Skills</h2>
+
+    <div class="row mb-4">
+        <!-- Add Category -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="mb-3">Add Category</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ category_form.as_p }}
+                        <button type="submit" name="category_submit" class="btn btn-primary btn-sm">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Skill -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="mb-3">Add Skill</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ skill_form.as_p }}
+                        <button type="submit" name="skill_submit" class="btn btn-primary btn-sm">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories + Skills List -->
+    {% if categories %}
+        {% for category in categories %}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ category.name }}</h5>
+                    <div>
+                        <a href="{% url 'skill_category_edit' category.id %}" class="btn btn-sm btn-outline-warning">Edit</a>
+                        <a href="{% url 'skill_category_delete' category.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if category.skills.all %}
+                        <ul class="list-group">
+                            {% for skill in category.skills.all %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ skill.name }}
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress me-2" style="width:150px;">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 style="width: {{ skill.level }}%;" 
+                                                 aria-valuenow="{{ skill.level }}" aria-valuemin="0" aria-valuemax="100">
+                                                {{ skill.level }}%
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'skill_edit' skill.id %}" class="btn btn-sm btn-outline-warning me-1">Edit</a>
+                                        <a href="{% url 'skill_delete' skill.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No skills yet in this category.</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No skill categories added yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
