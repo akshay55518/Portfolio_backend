@@ -6,7 +6,13 @@ SECRET_KEY = 'django-insecure-_qa)twradqm+i0=7a%)s@m!y7bckh!2=y!+njo4ph#l6t+#%tc
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]  # or set your backend domain once deployed
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",       # For local React dev
+    "https://portfolio-react-js-ashen.vercel.app",  # Your deployed Vercel frontend
+]
+
 
 
 # Application definition
