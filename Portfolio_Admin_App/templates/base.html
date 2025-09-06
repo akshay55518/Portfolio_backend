@@ -14,47 +14,69 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg text-white" style="background-color: #134b42; ">
         <div class="container">
 
-            <!-- Left side: Username + Logout -->
+            <!-- Brand / Username -->
+            {% if request.path == '/login/' %}
             {% if request.user.is_authenticated %}
-            <ul class="navbar-nav me-auto">
-    <li class="nav-item dropdown d-flex align-items-center">
-        <!-- Username link (goes to dashboard) -->
-        <a class="nav-link" href="{% url 'dashboard' %}">
-            {{ request.user.username }}
-        </a>
-
-        <!-- Dropdown toggle (just the arrow) -->
-        <a class="nav-link dropdown-toggle dropdown-toggle-split" href="#" id="userDropdown" 
-           role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <span class="visually-hidden">Toggle Dropdown</span>
-        </a>
-
-        <!-- Dropdown menu -->
-        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-        </ul>
-    </li>
-</ul>
-
-
-
+            <a class="navbar-brand" href="#">{{ request.user.username }}</a>
             {% else %}
             <a class="navbar-brand" href="#">AdminApp</a>
             {% endif %}
-
-            <!-- Right side: Navigation links -->
-            {% if request.user.is_authenticated %}
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'projects' %}">Projects</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'experience' %}">Experience</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'skills' %}">Skills</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'portfolio' %}">Portfolio</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">Contact</a></li>
-            </ul>
             {% endif %}
+
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar content -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+
+                {% if request.user.is_authenticated %}
+                <!-- Left side: Username dropdown (desktop only) -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-none d-lg-flex">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ request.user.username }}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <!-- Right side nav links -->
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- Desktop links -->
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{% url 'projects' %}">Projects</a></li>
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{% url 'experience' %}">Experience</a></li>
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{% url 'skills' %}">Skills</a></li>
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{% url 'portfolio' %}">Portfolio</a></li>
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                    </li>
+
+                    <!-- Mobile links stacked below navbar -->
+                     <div class="d-lg-none mt-2">
+                        <a class="nav-link text-white" href="{% url 'dashboard' %}">Dashboard</a>
+                        <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
+                     </div>
+                    <div class="d-lg-none mt-2">
+                        <a class="nav-link text-white" href="{% url 'projects' %}">Projects</a>
+                        <a class="nav-link text-white" href="{% url 'experience' %}">Experience</a>
+                        <a class="nav-link text-white" href="{% url 'skills' %}">Skills</a>
+                        <a class="nav-link text-white" href="{% url 'portfolio' %}">Portfolio</a>
+                        <a class="nav-link text-white" href="{% url 'contact' %}">Contact</a>
+                        
+                    </div>
+                </ul>
+
+                {% endif %}
+            </div>
         </div>
     </nav>
 

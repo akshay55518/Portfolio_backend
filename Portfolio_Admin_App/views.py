@@ -43,7 +43,6 @@ def dashboard(request):
     about = About.objects.last()
 
     if request.method == "POST":
-        # Handle About section form submit
         name = request.POST.get("name")
         email = request.POST.get("email")
         mobile = request.POST.get("mobile")
@@ -54,7 +53,6 @@ def dashboard(request):
         instagram = request.POST.get("instagram")
         github = request.POST.get("github")
         linkedin = request.POST.get("linkedin")
-        profile_image = request.FILES.get("profile_image")
 
         if about:  # Update
             about.name = name
@@ -67,11 +65,9 @@ def dashboard(request):
             about.instagram = instagram
             about.github = github
             about.linkedin = linkedin
-            if profile_image:
-                about.profile_image = profile_image
             about.save()
             messages.success(request, "About section updated!")
-        else:  # Create new
+        else:
             About.objects.create(
                 name=name,
                 email=email,
@@ -82,8 +78,7 @@ def dashboard(request):
                 description2=description2,
                 instagram=instagram,
                 github=github,
-                linkedin=linkedin,
-                profile_image=profile_image
+                linkedin=linkedin
             )
             messages.success(request, "About section created!")
         return redirect("dashboard")
@@ -96,9 +91,18 @@ def dashboard(request):
         "contact_messages": contact_messages,
         "about": about,
     }
+    
+    stats = {
+        "total_projects": projects.count(),
+        "total_portfolios": portfolios.count(),
+        "total_experiences": experiences.count(),
+        "total_skills": sum([category.skills.count() for category in skill_categories]),
+        "total_messages": contact_messages.count(),
+    }
+    context["stats"] = stats
     return render(request, "dashboard.html", context)
 
-# Project Management
+# ------------------------Project Management-----------------------
 @csrf_exempt
 @login_required(login_url='login')
 def project_dashboard(request):
@@ -134,7 +138,7 @@ def project_delete(request, pk):
     project.delete()
     return redirect('projects')
 
-# Experience Management
+# --------------------------Experience Management---------------------
 @csrf_exempt
 @login_required(login_url='login')
 def experience_dashboard(request):
@@ -171,13 +175,12 @@ def experience_delete(request, pk):
     return redirect('experience')
 
 
-# Skills Management
+# -----------------------Skills Management----------------------
 @csrf_exempt
 @login_required(login_url='login')
 def skills_dashboard(request):
     categories = SkillCategory.objects.prefetch_related("skills").all()
 
-    # Forms for adding
     category_form = SkillCategoryForm()
     skill_form = SkillForm()
 
@@ -236,7 +239,7 @@ def skill_category_delete(request, pk):
     category.delete()
     return redirect('skills')
 
-# Portfolio Management
+# ----------------------Portfolio Management-------------------
 @csrf_exempt
 @login_required(login_url='login')
 def portfolio_dashboard(request):
@@ -277,7 +280,7 @@ def portfolio_delete(request, pk):
         return redirect("portfolio")
     return render(request, "confirm_delete.html", {"object": portfolio, "title": "Delete Portfolio"})
 
-# Contact Management
+# ------------------------Contact Management------------------------
 @login_required(login_url='login')
 def contact_message_list(request):
     if request.method == "POST":
