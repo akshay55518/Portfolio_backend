@@ -5,35 +5,54 @@
 {% block content %}
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Projects</h2>
-        <a href="{% url 'project_create' %}" class="btn btn-success">+ Add Project</a>
+        <h2 class="fw-bold text-primary">
+            <i class="bi bi-kanban"></i> Projects
+        </h2>
+        <a href="{% url 'project_create' %}" class="btn btn-success shadow-sm">
+            <i class="bi bi-plus-circle"></i> Add Project
+        </a>
     </div>
 
     {% if projects %}
         <div class="row">
             {% for project in projects %}
-                <div class="col-md-6 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                            <h4 class="card-title">{{ project.title }}</h4>
-                            <p><strong>Problem:</strong> {{ project.problem }}</p>
-                            <p><strong>Approach:</strong> {{ project.approach }}</p>
-                            <p><strong>Tech Stack:</strong> {{ project.techStack }}</p>
-                            <p><strong>Results:</strong> {{ project.results }}</p>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow-lg border-0 h-100 hover-card">
+                        <div class="card-body d-flex flex-column">
+                            <h4 class="card-title text-dark fw-bold">
+                                <i class="bi bi-folder-fill text-primary"></i> {{ project.title }}
+                            </h4>
+
+                            <p><span class="fw-semibold text-muted">Problem:</span> {{ project.problem|truncatewords:15 }}</p>
+                            <p><span class="fw-semibold text-muted">Approach:</span> {{ project.approach|truncatewords:15 }}</p>
+                            <p>
+                                <span class="fw-semibold text-muted">Tech Stack:</span> 
+                                <span class="badge bg-info text-dark">{{ project.techStack }}</span>
+                            </p>
+                            <p><span class="fw-semibold text-muted">Results:</span> {{ project.results|truncatewords:15 }}</p>
+
                             {% if project.link %}
-                                <p><strong>Link:</strong> 
-                                    <small>{{project.link}}</small> | <a href="{{ project.link }}" target="_blank">View Link</a>
+                                <p class="mt-2">
+                                    <span class="fw-semibold text-muted">Link:</span>
+                                    <a href="{{ project.link }}" target="_blank" class="text-decoration-none">
+                                        <i class="bi bi-box-arrow-up-right"></i> View
+                                    </a>
                                 </p>
                             {% endif %}
-                        </div>
-                        <div class="card-footer d-flex justify-content-between">
-                            <small class="text-muted">Created: {{ project.created_at|date:"M d, Y" }}</small>
-                            <div>
-                                <a href="{% url 'project_edit' project.id %}" class="btn btn-sm btn-warning">Edit</a>
-                                <a href="{% url 'project_delete' project.id %}" class="btn btn-sm btn-danger"
-                                   onclick="return confirm('Are you sure you want to delete this project?');">
-                                   Delete
-                                </a>
+
+                            <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
+                                <small class="text-muted">
+                                    <i class="bi bi-clock-history"></i> {{ project.created_at|date:"M d, Y" }}
+                                </small>
+                                <div>
+                                    <a href="{% url 'project_edit' project.id %}" class="btn btn-sm btn-outline-warning">
+                                        <i class="bi bi-pencil-square">✏️Edit</i>
+                                    </a>
+                                    <a href="{% url 'project_delete' project.id %}" class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('Are you sure you want to delete this project?');">
+                                        <i class="bi bi-trash">🗑️Delete</i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -41,7 +60,10 @@
             {% endfor %}
         </div>
     {% else %}
-        <p>No projects available.</p>
+        <div class="alert alert-info text-center shadow-sm">
+            <i class="bi bi-info-circle"></i> No projects available.
+        </div>
     {% endif %}
 </div>
+
 {% endblock %}

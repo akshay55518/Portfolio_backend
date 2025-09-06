@@ -3,30 +3,41 @@
 {% block title %}Portfolio{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container py-4">
+    <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Portfolio</h2>
-        <a href="{% url 'portfolio_create' %}" class="btn btn-success">Add Portfolio</a>
+        <h2 class="fw-bold text-primary">Portfolio</h2>
+        <a href="{% url 'portfolio_create' %}" class="btn btn-success shadow-sm">
+            + Add Portfolio
+        </a>
     </div>
 
     {% if portfolios %}
         <div class="row">
             {% for item in portfolios %}
-                <div class="col-md-6 mb-4">
-                    <div class="card shadow-sm h-100">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow-sm border-0 h-100 portfolio-card">
                         <div class="card-body">
-                            <h4 class="card-title">{{ item.title }}</h4>
-                            <p><strong>Category:</strong> {{ item.category }}</p>
-                            <p>{{ item.description }}</p>
+                            <h4 class="card-title fw-semibold">{{ item.title }}</h4>
+                            <span class="badge bg-info text-dark mb-2">{{ item.category }}</span>
+                            <p class="text-muted">{{ item.description|truncatewords:20 }}</p>
                         </div>
-                        <div class="card-footer d-flex justify-content-between align-items-center">
-                            <small class="text-muted">Created: {{ item.created_at|date:"M d, Y" }}</small>
-                            <div>
+                        <div class="card-footer d-flex justify-content-between align-items-center bg-light">
+                            <small class="text-muted">
+                                Created: {{ item.created_at|date:"M d, Y" }}
+                            </small>
+                            <div class="d-flex gap-2">
                                 {% if item.link %}
-                                    <a href="{{ item.link }}" target="_blank" class="btn btn-sm btn-primary">View Link</a>
+                                    <a href="{{ item.link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        🔗 Link
+                                    </a>
                                 {% endif %}
-                                <a href="{% url 'portfolio_edit' item.pk %}" class="btn btn-sm btn-warning">Edit</a>
-                                <a href="{% url 'portfolio_delete' item.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                                <a href="{% url 'portfolio_edit' item.pk %}" class="btn btn-sm btn-outline-warning">✏️ Edit</a>
+                                <a href="{% url 'portfolio_delete' item.pk %}" 
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Are you sure you want to delete this item?');">
+                                   🗑️ Delete
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -34,7 +45,10 @@
             {% endfor %}
         </div>
     {% else %}
-        <p>No portfolio items available.</p>
+        <div class="alert alert-info text-center shadow-sm">
+            No portfolio items available.
+        </div>
     {% endif %}
 </div>
+
 {% endblock %}

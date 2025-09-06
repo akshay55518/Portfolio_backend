@@ -3,36 +3,48 @@
 {% block title %}Contact Messages{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mb-4">Inbox</h2>
+<div class="container py-4">
+    <h2 class="mb-4 fw-bold text-primary">Contact</h2>
 
     {% if messages %}
-        <ul class="list-group">
+        <div class="list-group">
             {% for msg in messages %}
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div>
-                        <h5><strong>Name:</strong> {{ msg.name }}</h5>
-                        <h6><strong>Email:</strong> {{ msg.email }}</h6>
-                        <p class="mt-2"><strong>Message:</strong> {{ msg.message }}</p>
-                        <small class="text-muted">{{ msg.created_at|date:"M d, Y H:i" }}</small>
-                    </div>
-                    <div class="d-flex flex-column align-items-end gap-2">
-                        <!-- Reply button -->
-                        <a href="mailto:{{ msg.email }}?subject=Reply to your message&body=Hi {{ msg.name }},%0D%0A%0D%0A" 
-                           class="btn btn-sm btn-success w-100">Reply</a>
+                <div class="list-group-item shadow-sm border-0 mb-3 rounded message-card">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <!-- Message Content -->
+                        <div>
+                            <h5 class="fw-bold mb-1">{{ msg.name }}</h5>
+                            <p class="text-muted mb-1">
+                                <strong>Email:</strong> <a href="mailto:{{ msg.email }}" class="text-decoration-none">{{ msg.email }}</a>
+                            </p>
+                            <p class="mb-2">{{ msg.message }}</p>
+                            <small class="text-muted">📅 {{ msg.created_at|date:"M d, Y H:i" }}</small>
+                        </div>
 
-                        <!-- Delete button -->
-                        <form method="post" class="w-100">
-                            {% csrf_token %}
-                            <input type="hidden" name="delete_id" value="{{ msg.id }}">
-                            <button type="submit" class="btn btn-sm btn-danger w-100">Delete</button>
-                        </form>
+                        <!-- Actions -->
+                        <div class="d-flex flex-column align-items-end gap-2">
+                            <!-- Reply button -->
+                            <a href="mailto:{{ msg.email }}?subject=Reply to your message&body=Hi {{ msg.name }},%0D%0A%0D%0A" 
+                               class="btn btn-sm btn-outline-success px-3">Reply</a>
+
+                            <!-- Delete button -->
+                            <form method="post" class="w-100">
+                                {% csrf_token %}
+                                <input type="hidden" name="delete_id" value="{{ msg.id }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger px-3"
+                                        onclick="return confirm('Are you sure you want to delete this message?');">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                </li>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
-        <p>No messages yet.</p>
+        <div class="alert alert-info text-center shadow-sm">
+            No messages yet 📭
+        </div>
     {% endif %}
 </div>
 {% endblock %}

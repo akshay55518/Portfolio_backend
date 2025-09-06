@@ -3,19 +3,22 @@
 {% block title %}Skills{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="mb-4 text-center">Skills</h2>
+<div class="container py-4">
+    <h2 class="mb-4 fw-bold text-primary">Skills</h2>
 
-    <div class="row mb-4">
+    <!-- Forms Section -->
+    <div class="row mb-5">
         <!-- Add Category -->
         <div class="col-md-6">
-            <div class="card shadow-sm">
+            <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-body">
-                    <h5 class="mb-3">Add Category</h5>
+                    <h5 class="fw-semibold mb-3 text-secondary">➕ Add Category</h5>
                     <form method="post">
                         {% csrf_token %}
                         {{ category_form.as_p }}
-                        <button type="submit" name="category_submit" class="btn btn-primary btn-sm">Add</button>
+                        <button type="submit" name="category_submit" class="btn btn-primary btn-sm shadow-sm">
+                            Add Category
+                        </button>
                     </form>
                 </div>
             </div>
@@ -23,13 +26,15 @@
 
         <!-- Add Skill -->
         <div class="col-md-6">
-            <div class="card shadow-sm">
+            <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-body">
-                    <h5 class="mb-3">Add Skill</h5>
+                    <h5 class="fw-semibold mb-3 text-secondary">➕ Add Skill</h5>
                     <form method="post">
                         {% csrf_token %}
                         {{ skill_form.as_p }}
-                        <button type="submit" name="skill_submit" class="btn btn-primary btn-sm">Add</button>
+                        <button type="submit" name="skill_submit" class="btn btn-success btn-sm shadow-sm">
+                            Add Skill
+                        </button>
                     </form>
                 </div>
             </div>
@@ -39,42 +44,53 @@
     <!-- Categories + Skills List -->
     {% if categories %}
         {% for category in categories %}
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">{{ category.name }}</h5>
+            <div class="card mb-4 border-0 shadow-sm rounded-4">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center rounded-top-4">
+                    <h5 class="mb-0 fw-bold">{{ category.name }}</h5>
                     <div>
-                        <a href="{% url 'skill_category_edit' category.id %}" class="btn btn-sm btn-outline-warning">Edit</a>
-                        <a href="{% url 'skill_category_delete' category.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        <a href="{% url 'skill_category_edit' category.id %}" class="btn btn-sm btn-outline-warning">✏️Edit</a>
+                        <a href="{% url 'skill_category_delete' category.id %}" class="btn btn-sm btn-outline-danger">🗑️Delete</a>
                     </div>
                 </div>
                 <div class="card-body">
                     {% if category.skills.all %}
-                        <ul class="list-group">
+                        <ul class="list-group list-group-flush">
                             {% for skill in category.skills.all %}
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ skill.name }}
+                                    <span class="fw-semibold">{{ skill.name }}</span>
                                     <div class="d-flex align-items-center">
-                                        <div class="progress me-2" style="width:150px;">
-                                            <div class="progress-bar" role="progressbar" 
-                                                 style="width: {{ skill.level }}%;" 
+                                        <!-- Progress -->
+                                        <div class="progress me-3" style="width:160px; height: 12px; border-radius: 8px;">
+                                            <div class="progress-bar 
+                                                {% if skill.level >= 80 %}
+                                                    bg-success
+                                                {% elif skill.level >= 50 %}
+                                                    bg-warning
+                                                {% else %}
+                                                    bg-danger
+                                                {% endif %}"
+                                                 role="progressbar"
+                                                 style="width: {{ skill.level }}%;"
                                                  aria-valuenow="{{ skill.level }}" aria-valuemin="0" aria-valuemax="100">
-                                                {{ skill.level }}%
                                             </div>
                                         </div>
-                                        <a href="{% url 'skill_edit' skill.id %}" class="btn btn-sm btn-outline-warning me-1">Edit</a>
-                                        <a href="{% url 'skill_delete' skill.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                        <small class="me-3 fw-bold text-muted">{{ skill.level }}%</small>
+                                        <a href="{% url 'skill_edit' skill.id %}" class="btn btn-sm btn-outline-warning me-1">✏️Edit</a>
+                                        <a href="{% url 'skill_delete' skill.id %}" class="btn btn-sm btn-outline-danger">🗑️Delete</a>
                                     </div>
                                 </li>
                             {% endfor %}
                         </ul>
                     {% else %}
-                        <p>No skills yet in this category.</p>
+                        <p class="text-muted fst-italic">No skills yet in this category.</p>
                     {% endif %}
                 </div>
             </div>
         {% endfor %}
     {% else %}
-        <p>No skill categories added yet.</p>
+        <div class="alert alert-info text-center shadow-sm">
+            No skill categories added yet.
+        </div>
     {% endif %}
 </div>
 {% endblock %}
