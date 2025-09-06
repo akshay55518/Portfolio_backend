@@ -54,3 +54,20 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} ({self.email})"
+    
+
+class About(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    mobile = models.CharField(max_length=20)
+    location = models.CharField(max_length=200)
+    role = models.CharField(max_length=100)
+    description1 = models.TextField()
+    description2 = models.TextField()
+    instagram = models.URLField(blank=True, null=True)
+    github = models.URLField(blank=True, null=True)
+    linkedin = models.URLField(blank=True, null=True)
+    # profile_image = models.ImageField(upload_to="about/", blank=True, null=True)
+
+    def __str__(self):
+        return self.name

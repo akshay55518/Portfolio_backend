@@ -8,8 +8,11 @@ from django.contrib import messages
 
 # Create your views here.
 # Admin Login
-
 def login_view(request):
+    # 🔹 If already logged in, skip login page and go to dashboard
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -17,18 +20,83 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None and user.is_staff:  
             login(request, user)
-            return redirect("projects")  
+            return redirect("dashboard")  
         else:
             messages.error(request, "Invalid username or password.")
 
     return render(request, "login.html")
 
-
+# logout view
 @login_required(login_url='login')
 def logout_view(request):
     logout(request)
     return redirect("login")
 
+# dashboard view
+@login_required(login_url='login')
+def dashboard(request):
+    projects = Project.objects.all().order_by('-created_at')
+    portfolios = Portfolio.objects.all().order_by('-created_at')
+    experiences = Experience.objects.all()
+    skill_categories = SkillCategory.objects.prefetch_related('skills').all()
+    contact_messages = ContactMessage.objects.all().order_by('-created_at')
+    about = About.objects.last()
+
+    if request.method == "POST":
+        # Handle About section form submit
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        mobile = request.POST.get("mobile")
+        location = request.POST.get("location")
+        role = request.POST.get("role")
+        description1 = request.POST.get("description1")
+        description2 = request.POST.get("description2")
+        instagram = request.POST.get("instagram")
+        github = request.POST.get("github")
+        linkedin = request.POST.get("linkedin")
+        profile_image = request.FILES.get("profile_image")
+
+        if about:  # Update
+            about.name = name
+            about.email = email
+            about.mobile = mobile
+            about.location = location
+            about.role = role
+            about.description1 = description1
+            about.description2 = description2
+            about.instagram = instagram
+            about.github = github
+            about.linkedin = linkedin
+            if profile_image:
+                about.profile_image = profile_image
+            about.save()
+            messages.success(request, "About section updated!")
+        else:  # Create new
+            About.objects.create(
+                name=name,
+                email=email,
+                mobile=mobile,
+                location=location,
+                role=role,
+                description1=description1,
+                description2=description2,
+                instagram=instagram,
+                github=github,
+                linkedin=linkedin,
+                profile_image=profile_image
+            )
+            messages.success(request, "About section created!")
+        return redirect("dashboard")
+
+    context = {
+        "projects": projects,
+        "portfolios": portfolios,
+        "experiences": experiences,
+        "skill_categories": skill_categories,
+        "contact_messages": contact_messages,
+        "about": about,
+    }
+    return render(request, "dashboard.html", context)
 
 # Project Management
 @csrf_exempt

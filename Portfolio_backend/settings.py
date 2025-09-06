@@ -1,4 +1,14 @@
 from pathlib import Path
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Add this at the bottom
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

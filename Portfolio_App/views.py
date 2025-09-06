@@ -29,4 +29,10 @@ class SkillsAPIView(APIView):
 class ContactMessageCreateView(generics.CreateAPIView):
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
-    
+
+class AboutDetailView(generics.RetrieveAPIView):
+    queryset = About.objects.all()
+    serializer_class = AboutSerializer
+
+    def get_object(self):
+        return About.objects.last()
