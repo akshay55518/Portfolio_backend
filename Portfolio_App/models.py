@@ -32,7 +32,7 @@ class Experience(models.Model):
         return f"{self.role} at {self.company}"
     
 class SkillCategory(models.Model):
-    name = models.CharField(max_length=100, unique=True)  # e.g. "Programming Languages"
+    name = models.CharField(max_length=100, unique=True) 
 
     def __str__(self):
         return self.name
@@ -40,8 +40,8 @@ class SkillCategory(models.Model):
 
 class Skill(models.Model):
     category = models.ForeignKey(SkillCategory, related_name="skills", on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)  # e.g. "Python"
-    level = models.PositiveIntegerField()  # percentage (0-100)
+    name = models.CharField(max_length=100)
+    level = models.PositiveIntegerField()
 
     def __str__(self):
         return f"{self.name} ({self.level}%)"
@@ -67,7 +67,6 @@ class About(models.Model):
     instagram = models.URLField(blank=True, null=True)
     github = models.URLField(blank=True, null=True)
     linkedin = models.URLField(blank=True, null=True)
-    # profile_image = models.ImageField(upload_to="about/", blank=True, null=True)
 
     def __str__(self):
         return self.name

@@ -31,14 +31,14 @@ class ExperienceForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-control'
 
         # Pre-fill work_done as plain text (tasks per line)
-        if self.instance and isinstance(self.instance.work_done, dict):
-            tasks = self.instance.work_done.get("tasks", [])
-            self.initial['work_done'] = "\n".join(tasks)
+        if self.instance and isinstance(self.instance.work_done, list):
+            self.initial['work_done'] = "\n".join(self.instance.work_done)
 
     def clean_work_done(self):
         data = self.cleaned_data['work_done']
         tasks = [line.strip() for line in data.splitlines() if line.strip()]
-        return {"tasks": tasks}
+        return tasks   # ✅ Return plain list instead of dict
+
 
 
 class SkillCategoryForm(forms.ModelForm):
